@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>VoltrexFN - Magazin Gaming</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+:root{--bg:#0D0D0D;--header:#000;--card:#1A1A1A;--primary:#00CFFF;--secondary:#7C3AED;--accent:#00FFB3;--text:#FFF;--text2:#BDBD}
+body{background:var(--bg);color:var(--text)}
+header{display:flex;justify-content:center;align-items:center;padding:20px 60px;background:var(--header);border-bottom:2px solid var(--primary);position:sticky;top:0;z-index:1000}
+.logo{font-size:34px;font-weight:bold;color:var(--primary);position:absolute;left:60px}
+nav{display:flex;gap:40px}
+nav a{color:var(--text);text-decoration:none;font-weight:bold;font-size:16px;cursor:pointer}
+nav a:hover{color:var(--primary)}
+.dropdown{position:relative}
+.dropdown-content{display:none;position:absolute;top:35px;left:0;background:var(--card);border:2px solid var(--primary);border-radius:10px;min-width:220px;z-index:999;box-shadow:0 0 20px rgba(0,207,255,0.3)}
+.dropdown-content.show{display:block}
+.dropdown-content a{display:block;padding:12px 15px;color:var(--text);font-size:14px}
+.dropdown-content a:hover{background:var(--primary);color:#000}
+.home{padding:100px 60px;text-align:center;background:linear-gradient(180deg,#0D0D0D,#111)}
+.home h1{font-size:48px;color:var(--primary);margin-bottom:20px}
+.home p{font-size:18px;color:var(--text2);max-width:800px;margin:0 auto 30px;line-height:1.6}
+.btn{padding:15px 35px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:12px;font-weight:bold;border:none;cursor:pointer;font-size:16px}
+.produse{padding:60px;text-align:center}
+.despre{padding:80px 60px;text-align:center;background:#111;border-top:2px solid var(--primary)}
+.despre h2{color:var(--primary);font-size:32px;margin-bottom:20px}
+.despre p{color:var(--text2);max-width:800px;margin:0 auto;line-height:1.6}
+.card{width:300px;margin:12px;display:inline-block;background:var(--card);border-radius:15px;border:1px solid #303030;vertical-align:top;text-align:left}
+.card.pc{border:2px solid #FF00FF;background:#1F0A1F}
+.card.pc h2{color:#FF00FF;font-size:13px}
+.card h2{margin:15px;font-size:14px;color:var(--primary)}
+.card.desc{margin:0 15px 10px 15px;font-size:11px;color:var(--text2);line-height:1.4}
+.card p{margin:0 15px;color:var(--accent);font-size:18px;font-weight:bold}
+.stock{margin:0 15px;color:var(--text2);font-size:12px}
+.card button{margin:15px;padding:10px 20px;border:none;border-radius:10px;cursor:pointer;font-weight:bold;color:white;background:linear-gradient(135deg,var(--primary),var(--secondary));font-size:12px;width:calc(100% - 30px)}
+.cart-icon{position:fixed;top:90px;right:30px;background:var(--primary);color:#000;padding:12px 18px;border-radius:50px;font-weight:bold;cursor:pointer;z-index:999}
+.cart-box,.checkout-box{display:none;position:fixed;top:140px;right:30px;width:350px;background:var(--card);border:2px solid var(--primary);border-radius:15px;padding:20px;z-index:999;max-height:500px;overflow-y:auto}
+.checkout-box input{width:100%;padding:10px;margin-bottom:12px;background:#111;border:1px solid #333;border-radius:8px;color:var(--text)}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">VoltrexFN</div>
+<nav>
+<a onclick="document.getElementById('home').scrollIntoView()">Home</a>
+<div class="dropdown">
+<a onclick="toggleProduse()">Produse ▼</a>
+<div class="dropdown-content" id="produseMenu">
+<a onclick="goTo('pcLow')">🖥️ PC-uri</a>
+<a onclick="goTo('tastaturi')">⌨️ Tastaturi</a>
+<a onclick="goTo('mouse')">🖱️ Mouse</a>
+<a onclick="goTo('mousepad')">🖲️ Mousepaduri</a>
+<a onclick="goTo('microfoane')">🎤 Microfoane</a>
+</div>
+</div>
+<a onclick="document.getElementById('despre').scrollIntoView()">Despre Noi</a>
+</nav>
+</header>
+
+<div class="cart-icon" onclick="openCart()">🛒 Coș (<span id="cartCount">0</span>)</div>
+<div class="cart-box" id="cartBox"><h3 style="color:#00CFFF">Coșul tău</h3><div id="cartItems">Coș gol</div><div>Total: <span id="cartTotal">0</span> Lei</div><button class="btn" style="width:100%;margin-top:15px" onclick="openCheckout()">Finalizează Comanda</button></div>
+<div class="checkout-box" id="checkoutBox"><h3>Finalizare Comandă</h3><input type="text" id="nume" placeholder="Nume Complet"><input type="text" id="adresa" placeholder="Adresa + Oras"><input type="text" id="telefon" placeholder="Telefon"><input type="email" id="email" placeholder="Email"><button class="btn" style="width:100%" onclick="placeOrder()">Plasează Comanda</button></div>
+
+<section class="home" id="home">
+<h1>Bine ai venit la VoltrexFN</h1>
+<p>Cel mai tare magazin de gaming din Romania. PC-uri Low, Mid si High End + periferice top.</p>
+<button class="btn" onclick="document.getElementById('pcLow').scrollIntoView()">Vezi Produsele</button>
+</section>
+
+<section class="produse">
+<h2 style="color:#FF00FF;margin-top:30px" id="pcLow">🖥️ 25 PC LOW END</h2>
+<div id="pcLowList"></div>
+<h2 style="color:#FF00FF;margin-top:30px">🖥️ 25 PC MID END</h2>
+<div id="pcMid"></div>
+<h2 style="color:#FF00FF;margin-top:30px">🖥️ 25 PC HIGH END</h2>
+<div id="pcHigh"></div>
+<h2 style="color:#00CFFF;margin-top:30px" id="tastaturi">⌨️ 25 TASTATURI</h2>
+<div id="tastaturiList"></div>
+<h2 style="color:#00CFFF;margin-top:30px" id="mouse">🖱️ 25 MOUSE</h2>
+<div id="mouseList"></div>
+<h2 style="color:#00CFFF;margin-top:30px" id="mousepad">🖲️ 25 MOUSEPAD</h2>
+<div id="mousepadList"></div>
+<h2 style="color:#00CFFF;margin-top:30px" id="microfoane">🎤 25 MICROFOANE</h2>
+<div id="microfoaneList"></div>
+</section>
+
+<section class="despre" id="despre">
+<h2>Despre Noi</h2>
+<p>VoltrexFN este magazinul tau nr 1 de gaming din Romania. Garantie 24 luni si livrare in 24h.</p>
+</section>
+
+<script>
+let cart=[];let stock={};
+function toggleProduse(){document.getElementById('produseMenu').classList.toggle('show');}
+function goTo(id){document.getElementById(id).scrollIntoView();document.getElementById('produseMenu').classList.remove('show');}
+
+// GENEREZ 25 PRODUSE
+const modeleLow = []; for(let i=1;i<=25;i++){modeleLow.push({name:`Voltrex Low ${i}`,cpu:"Ryzen 5 5600G",gpu:"GTX 1650",ram:"16GB DDR4",ssd:"512GB NVMe",sursa:"500W",pret:1150+i*3})}
+const modeleMid = []; for(let i=1;i<=25;i++){modeleMid.push({name:`Voltrex Mid ${i}`,cpu:"i5-12400F",gpu:"RTX 3060",ram:"32GB DDR4",ssd:"1TB NVMe",sursa:"650W",pret:2450+i*4})}
+const modeleHigh = []; for(let i=1;i<=25;i++){modeleHigh.push({name:`Voltrex Beast ${i}`,cpu:"Ryzen 7 5700X3D",gpu:"RTX 3070",ram:"32GB DDR4",ssd:"1TB NVMe",sursa:"750W",pret:3950+i*6})}
+const branduri = ["Logitech","Razer","Corsair","Glorious","HyperX"];
+const tastaturi = []; for(let i=1;i<=25;i++){tastaturi.push({n:`Tastatura Mecanica ${i}`,p:120+i*18})}
+const mouse = []; for(let i=1;i<=25;i++){mouse.push({n:`Mouse Gaming ${i}`,p:60+i*14})}
+const mousepad = []; for(let i=1;i<=25;i++){mousepad.push({n:`Mousepad XXL ${i}`,p:25+i*4})}
+const microfoane = []; for(let i=1;i<=25;i++){microfoane.push({n:`Microfon Streaming ${i}`,p:100+i*15})}
+
+function genereazaPC(lista, containerId) {
+    let html = ""; for(let i=0; i<lista.length; i++) {
+        let model = lista[i];
+        html += `<div class="card pc"><h2>${model.name}</h2><div class="desc"><b>CPU:</b> ${model.cpu}<br><b>GPU:</b> ${model.gpu}<br><b>RAM:</b> ${model.ram}<br><b>SSD:</b> ${model.ssd}</div><p>${model.pret} Lei</p><div class="stock">Stoc: 10</div><button onclick="addToCart('${model.name}',${model.pret})">Adaugă</button></div>`;
+    }
+    document.getElementById(containerId).innerHTML = html;
+}
+function genereazaProduse(lista, containerId) {
+    let html = ""; for(let i=0; i<lista.length; i++) {
+        let model = lista[i]; let brand = branduri[i % branduri.length]; let numeFinal = brand + " " + model.n;
+        html += `<div class="card"><h2>${numeFinal}</h2><p>${model.p} Lei</p><div class="stock">Stoc: 10</div><button onclick="addToCart('${numeFinal}',${model.p})">Adaugă</button></div>`;
+    }
+    document.getElementById(containerId).innerHTML = html;
+}
+window.onload = function() {
+genereazaPC(modeleLow, "pcLowList"); genereazaPC(modeleMid, "pcMid"); genereazaPC(modeleHigh, "pcHigh");
+genereazaProduse(tastaturi, "tastaturiList"); genereazaProduse(mouse, "mouseList"); 
+genereazaProduse(mousepad, "mousepadList"); genereazaProduse(microfoane, "microfoaneList");
+}
+function addToCart(name,price){if(!stock[name])stock[name]=10; if(stock[name]<=0){alert("Stoc epuizat!");return} cart.push({name,price});stock[name]--; document.getElementById('cartCount').innerText=cart.length; alert("✅ "+name+" adaugat!"); updateCart()}
+function updateCart(){let items=document.getElementById('cartItems');let total=0; if(cart.length==0){items.innerHTML="Coș gol"}else{items.innerHTML="";cart.forEach((i)=>{total+=i.price;items.innerHTML+=`<div>${i.name} - ${i.price} Lei</div>`})} document.getElementById('cartTotal').innerText=total}
+function openCart(){document.getElementById('cartBox').style.display='block';document.getElementById('checkoutBox').style.display='none'}
+function openCheckout(){if(cart.length==0){alert("Coș gol!");return}document.getElementById('cartBox').style.display='none';document.getElementById('checkoutBox').style.display='block'}
+function placeOrder(){alert("Comanda inregistrata! Te contactam noi."); cart = []; updateCart(); document.getElementById('cartCount').innerText=0; document.getElementById('checkoutBox').style.display='none';}
+</script>
+</body>
+</html>
